@@ -1,0 +1,344 @@
+# ============================================================
+# Alfido Tech Internship - Task 2
+# REST API Integration using Python
+# Name: vishwa
+# Candidate ID: BS/REG/121508
+# ============================================================
+
+import requests
+import json
+from datetime import datetime
+
+print("=" * 60)
+print("        REST API INTEGRATION PROJECT")
+print("        Alfido Tech Internship")
+print("           Intern: Vishwa" )
+print("=" * 60)
+
+BASE_URL = "https://jsonplaceholder.typicode.com"
+
+# ============================================================
+# PART 1 - FETCH USERS
+# ============================================================
+
+print("\nPART 1 : FETCH USERS DATA")
+print("-" * 45)
+
+try:
+
+    response = requests.get(f"{BASE_URL}/users")
+
+    if response.status_code == 200:
+
+        users = response.json()
+
+        print("Users fetched successfully")
+        print("Total Users :", len(users))
+
+        print("\nUser Details:\n")
+
+        for user in users[:5]:
+
+            print("ID      :", user["id"])
+            print("Name    :", user["name"])
+            print("Email   :", user["email"])
+            print("Website :", user["website"])
+            print("City    :", user["address"]["city"])
+            print()
+
+except Exception as e:
+    print("Error :", e)
+
+# ============================================================
+# PART 2 - FETCH COMMENTS
+# ============================================================
+
+print("\nPART 2 : FETCH COMMENTS")
+print("-" * 45)
+
+try:
+
+    response = requests.get(f"{BASE_URL}/comments")
+
+    comments = response.json()
+
+    print("Total Comments :", len(comments))
+
+    print("\nFirst 3 Comments:\n")
+
+    for comment in comments[:3]:
+
+        print("Comment ID :", comment["id"])
+        print("Name       :", comment["name"][:40])
+        print("Email      :", comment["email"])
+        print()
+
+except Exception as e:
+    print("Error :", e)
+
+# ============================================================
+# PART 3 - SEARCH EMAILS
+# ============================================================
+
+print("\nPART 3 : SEARCH COMMENTS BY EMAIL")
+print("-" * 45)
+
+try:
+
+    keyword = ".biz"
+
+    matched = []
+
+    for comment in comments:
+
+        if keyword in comment["email"]:
+            matched.append(comment)
+
+    print("Matching Emails :", len(matched))
+
+    print("\nSample Results:\n")
+
+    for item in matched[:3]:
+
+        print("Email :", item["email"])
+        print("Comment :", item["body"][:50])
+        print()
+
+except Exception as e:
+    print("Error :", e)
+
+# ============================================================
+# PART 4 - FETCH ALBUMS
+# ============================================================
+
+print("\nPART 4 : FETCH ALBUMS")
+print("-" * 45)
+
+try:
+
+    response = requests.get(f"{BASE_URL}/albums")
+
+    albums = response.json()
+
+    print("Total Albums :", len(albums))
+
+    print("\nFirst 5 Albums:\n")
+
+    for album in albums[:5]:
+
+        print("Album ID :", album["id"])
+        print("Title    :", album["title"])
+        print()
+
+except Exception as e:
+    print("Error :", e)
+
+# ============================================================
+# PART 5 - CREATE NEW DATA
+# ============================================================
+
+print("\nPART 5 : CREATE NEW RECORD")
+print("-" * 45)
+
+try:
+
+    data = {
+        "title": "Python Internship Task",
+        "body": "Working with REST APIs in Python",
+        "userId": 2
+    }
+
+    response = requests.post(
+        f"{BASE_URL}/posts",
+        json=data
+    )
+
+    result = response.json()
+
+    print("Record Created Successfully")
+    print("New ID :", result["id"])
+    print("Title  :", result["title"])
+
+except Exception as e:
+    print("Error :", e)
+
+# ============================================================
+# PART 6 - UPDATE EXISTING DATA
+# ============================================================
+
+print("\nPART 6 : UPDATE EXISTING RECORD")
+print("-" * 45)
+
+try:
+
+    updated_data = {
+        "id": 2,
+        "title": "Updated API Project",
+        "body": "Learning update requests using Python",
+        "userId": 2
+    }
+
+    response = requests.put(
+        f"{BASE_URL}/posts/2",
+        json=updated_data
+    )
+
+    result = response.json()
+
+    print("Record Updated Successfully")
+    print("Updated Title :", result["title"])
+
+except Exception as e:
+    print("Error :", e)
+
+# ============================================================
+# PART 7 - DELETE RECORD
+# ============================================================
+
+print("\nPART 7 : DELETE RECORD")
+print("-" * 45)
+
+try:
+
+    response = requests.delete(f"{BASE_URL}/posts/2")
+
+    if response.status_code == 200:
+
+        print("Record Deleted Successfully")
+        print("Status Code :", response.status_code)
+
+except Exception as e:
+    print("Error :", e)
+
+# ============================================================
+# PART 8 - ANALYZE POSTS
+# ============================================================
+
+print("\nPART 8 : ANALYZE POSTS DATA")
+print("-" * 45)
+
+try:
+
+    response = requests.get(f"{BASE_URL}/posts")
+
+    posts = response.json()
+
+    total_posts = len(posts)
+
+    long_titles = 0
+
+    for post in posts:
+
+        if len(post["title"]) > 30:
+            long_titles += 1
+
+    short_titles = total_posts - long_titles
+
+    print("Total Posts        :", total_posts)
+    print("Long Titles Count  :", long_titles)
+    print("Short Titles Count :", short_titles)
+
+except Exception as e:
+    print("Error :", e)
+
+# ============================================================
+# PART 9 - SAVE DATA TO JSON FILE
+# ============================================================
+
+print("\nPART 9 : SAVE DATA INTO JSON FILE")
+print("-" * 45)
+
+try:
+
+    project_data = {
+        "student_name": "vishwa",
+        "candidate_id": "BS/REG/121508",
+        "project_name": "REST API Integration",
+        "date": datetime.now().strftime("%d-%m-%Y %H:%M:%S"),
+        "total_users": len(users),
+        "total_comments": len(comments),
+        "total_albums": len(albums)
+    }
+
+    with open("project_summary.json", "w") as file:
+
+        json.dump(project_data, file, indent=4)
+
+    print("Project summary saved successfully")
+
+except Exception as e:
+    print("Error :", e)
+
+# ============================================================
+# PART 10 - HANDLE ERRORS
+# ============================================================
+
+print("\nPART 10 : ERROR HANDLING")
+print("-" * 45)
+
+try:
+
+    response = requests.get(
+        f"{BASE_URL}/invalidpage"
+    )
+
+    if response.status_code == 404:
+
+        print("404 Error Handled Successfully")
+
+except Exception as e:
+    print("Error :", e)
+
+try:
+
+    response = requests.get(
+        f"{BASE_URL}/posts",
+        timeout=5
+    )
+
+    print("Timeout test successful")
+
+except requests.exceptions.Timeout:
+
+    print("Request Timeout Error")
+
+except Exception as e:
+
+    print("Error :", e)
+
+# ============================================================
+# FINAL SUMMARY
+# ============================================================
+
+print("\n" + "=" * 60)
+print("              TASK COMPLETED")
+print("=" * 60)
+
+print("\nConcepts Used:\n")
+
+concepts = [
+    "REST API Integration",
+    "GET Request",
+    "POST Request",
+    "PUT Request",
+    "DELETE Request",
+    "JSON File Handling",
+    "Searching Data",
+    "Filtering Results",
+    "Error Handling",
+    "Data Analysis"
+]
+
+for concept in concepts:
+
+    print("+", concept)
+
+print("\nGenerated File:")
+print("+ project_summary.json")
+
+print("\nStudent Details:")
+print("Name         : Vishwa")
+print("Candidate ID : BS/REG/121508")
+
+print("\nProject Finished Successfully")
+print("=" * 60)
