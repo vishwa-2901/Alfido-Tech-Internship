@@ -1,0 +1,140 @@
+# ==========================================
+# PYTHON FILE HANDLING & AUTOMATION PROJECT
+# ==========================================
+# Developed for Alfido Tech Internship
+#
+# Features:
+# 1. Create and write data into a text file
+# 2. Read file contents
+# 3. Create and write CSV data
+# 4. Rename files
+# 5. Move files to another folder
+# 6. Delete files
+# 7. Exception handling using try-except
+#
+# ==========================================
+
+import os
+import csv
+import shutil
+
+
+# Function to create and write text file
+def create_text_file():
+    try:
+        with open("student.txt", "w") as file:
+            file.write("Name: Vishwa\n")
+            file.write("Course: Python Internship\n")
+            file.write("Company: Alfido Tech\n")
+
+        print("Text file created successfully.")
+
+    except Exception as e:
+        print("Error creating text file:", e)
+
+
+# Function to read text file
+def read_text_file():
+    try:
+        with open("student.txt", "r") as file:
+            content = file.read()
+
+        print("\n----- FILE CONTENT -----")
+        print(content)
+
+    except FileNotFoundError:
+        print("File not found.")
+
+    except Exception as e:
+        print("Error:", e)
+
+
+# Function to create CSV file
+def create_csv_file():
+    try:
+        with open("students.csv", "w", newline="") as file:
+            writer = csv.writer(file)
+
+            writer.writerow(["ID", "Name", "Department"])
+            writer.writerow([101, "Srilahari", "CSE"])
+            writer.writerow([102, "Ravi", "ECE"])
+            writer.writerow([103, "Priya", "IT"])
+
+        print("CSV file created successfully.")
+
+    except Exception as e:
+        print("Error creating CSV file:", e)
+
+
+# Function to rename file
+def rename_file():
+    try:
+        os.rename("student.txt", "student_info.txt")
+        print("File renamed successfully.")
+
+    except FileNotFoundError:
+        print("Original file does not exist.")
+
+    except Exception as e:
+        print("Error:", e)
+
+
+# Function to move file
+def move_file():
+    try:
+        folder_name = "Backup"
+
+        # Create folder if not exists
+        if not os.path.exists(folder_name):
+            os.mkdir(folder_name)
+
+        source = "student_info.txt"
+        destination = os.path.join(folder_name, source)
+
+        shutil.move(source, destination)
+
+        print("File moved successfully.")
+
+    except FileNotFoundError:
+        print("File not found for moving.")
+
+    except Exception as e:
+        print("Error:", e)
+
+
+# Function to delete CSV file
+def delete_file():
+    try:
+        if os.path.exists("students.csv"):
+            os.remove("students.csv")
+            print("CSV file deleted successfully.")
+        else:
+            print("CSV file does not exist.")
+
+    except Exception as e:
+        print("Error:", e)
+
+
+# Main Program
+def main():
+
+    print("\n===== PYTHON FILE AUTOMATION PROJECT =====")
+
+    create_text_file()
+
+    read_text_file()
+
+    create_csv_file()
+
+    rename_file()
+
+    move_file()
+
+    delete_file()
+
+    print("\nProject completed successfully.")
+
+
+# Program Execution
+if __name__ == "__main__":
+    main()
